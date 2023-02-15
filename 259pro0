@@ -1,0 +1,189 @@
+///////////////////////////////////////////////////////////////
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
+using namespace std;
+
+ifstream i_f; // declare a pointer to an input file;
+ofstream o_f("output.txt", ios::out); 
+
+  class P0_BANK{
+   public:      // public methods for this class
+        P0_BANK(int); // constructor;
+		// example usage: b.P0_BANK(x);
+		// create an object called b with x customers; 
+
+	void P0_LIST(int); // a method;
+		// example usage: b.P0_LIST(x);
+		// if x is 1, list the customer account numbers;
+		// if x is 2, list the customer account numbers with checking balances;
+		// if x is 3, list the customer account numbers with savings balances;
+		// if x is 4, list the customer account numbers with checking and savings balances;
+		// returns no values;
+
+	int P0_INFO(int, int); // another method;
+		// example usage: b.P0_INFO(minmax, type);
+		// if minmax is 0 and type is 0, find min balance in checking accounts;
+		// if minmax is 0 and type is 1, find min balance in savings accounts;
+		// if minmax is 1 and type is 0, find max balance in checking accounts;
+		// if minmax is 1 and type is 1, find max balance in savings accounts;
+		// returns the min or max value;
+		// if input error, return -1;
+
+   protected:	// protected var to be used by this class and its derivative
+   		// classes only (not from main)
+        int n;  // no of students;
+		int acct[20]; // an integer array to hold the account numbers;
+		int pin[20]; // an integer array to hold the pins;
+        int checking_bal[20]; // array to hold checking balances;
+        int savings_bal[20]; // array to hold savings balances; 
+   };
+  
+P0_BANK::P0_BANK(int x)
+{
+	// your goes code below:
+	int i;
+	n = x;
+
+	i_f.open("customerInfo.txt", ios::in); // open input file;
+
+	for(i =0; i < n; i++)
+	{
+		i_f >> acct[i] >> pin[i];
+		i_f >> checking_bal[i] >> savings_bal[i];
+	}
+	i_f.close(); // close input file;
+	i_f.clear(); // rewind file pointer to the top of the file;
+
+	o_f << "P0: OBJECT HAS " << x << " CUSTOMERS." << endl;
+}
+
+void
+P0_BANK::P0_LIST(int x)
+{
+	int i;
+	o_f << "P0: START P0_LIST" << endl;
+	o_f << "P0: P0_LIST IS CALLED WITH x: " << x  << endl;
+	// your code goes below:
+	if(x == 1)
+	{
+		o_f << "P0: CUSTOMER ACCOUNT NUMBERS:"<< endl;
+		for(i = 0; i < n; i++)
+		{
+			o_f << "ACCOUNT: " << acct[i] << endl;
+		}
+	}
+	else if(x == 2)
+	{
+		o_f << "P0: CUSTOMER ACCOUNT NUMBERS WITH CHECKING BALANCES:"<< endl;
+		for(i = 0; i < n; i++)
+		{
+			o_f << "ACCOUNT: " << acct[i] << "\tCHECKING BALANCE: " << checking_bal [i] << endl;
+		}
+	}
+	else if(x == 3)
+	{
+		o_f << "P0: CUSTOMER ACCOUNT NUMBERS WITH SAVINGS BALANCES:"<< endl;
+		for(i = 0; i < n; i++)
+		{
+			o_f << "ACCOUNT: " << acct[i] << "\tSAVINGS BALANCE: " << savings_bal[i] << endl;
+		}
+	}
+	else if(x == 4)
+	{
+		o_f << "P0: CUSTOMER ACCOUNT NUMBERS WITH CHECKING AND SAVINGS BALANCES:"<< endl;
+		for(i = 0; i < n; i++)
+		{
+			o_f << "ACCOUNT: " << acct[i] << "\tCHECKING BALANCE: " << checking_bal[i] 
+					<< "\tSAVINGS BALANCE: " << savings_bal[i] << endl;
+		}
+	}
+	else
+	{
+		o_f << "P0: INPUT ERROR"<< endl;
+	}
+	o_f << "P0: END P0_LIST" << endl;
+}
+
+int
+P0_BANK::P0_INFO(int minmax, int type)
+{
+	// your code goes below:
+	int i;
+	int min, max;
+
+	o_f << "P0: START P0_INFO" << endl;
+	o_f << "P0: P0_INFO IS CALLED WITH minmax: " << minmax << " AND WITH type: " << type << endl;
+	if (minmax == 0 && type == 0)
+	{
+
+		min = checking_bal[0];
+		for(i = 0; i < n; i++)
+		{
+			if (min > checking_bal[i])
+			{
+				min = checking_bal[i];
+			}
+			else {}
+		}
+		o_f << "P0: MINIMUM BALANCE FOR CHECKING ACCOUNTS IS " << min << "." << endl;
+		o_f << "P0: END P0_INFO" << endl;
+		return min;
+	}
+	else if (minmax == 0 && type == 1)
+	{
+
+		min = savings_bal[0];
+		for(i = 0; i < n; i++)
+		{
+			if (min > savings_bal[i])
+			{
+				min = savings_bal[i];
+			}
+			else {}
+		}
+		o_f << "P0: MINIMUM BALANCE FOR SAVINGS ACCOUNTS IS " << min << "." << endl;
+		o_f << "P0: END P0_INFO" << endl;
+		return min;
+	}
+	else if (minmax == 1 && type == 0)
+	{
+
+		max = checking_bal[0];
+		for(i = 0; i < n; i++)
+		{
+			if (max < checking_bal[i])
+			{
+				max = checking_bal[i];
+			}
+			else {}
+		}
+		o_f << "P0: MAXIMUM BALANCE FOR CHECKING ACCOUNTS IS " << max << "." << endl;
+		o_f << "P0: END P0_INFO" << endl;
+		return max;
+	}
+	else if (minmax == 1 && type == 1)
+	{
+
+		max = savings_bal[0];
+		for(i = 0; i < n; i++)
+		{
+			if (max < savings_bal[i])
+			{
+				max = savings_bal[i];
+			}
+			else {}
+		}
+		o_f << "P0: MAXIMUM BALANCE FOR SAVINGS ACCOUNTS IS " << max << "." << endl;
+		o_f << "P0: END P0_INFO" << endl;
+		return max;
+	}
+	else
+	{
+		o_f << "P0: INPUT ERROR" << endl;
+		o_f << "P0: END P0_INFO" << endl;
+		return -1;
+	}
+}
+
