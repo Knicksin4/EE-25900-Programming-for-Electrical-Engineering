@@ -1,0 +1,270 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include "/mnt/ee259dir/tools/pro_1/sample_p1.h"
+
+using namespace std;
+
+  class P2_BANK: public P1_BANK{
+   public:      // public methods for P2_BANK class
+        P2_BANK(int); // constructor;
+		// example usage: b.P2_BANK(x);
+		// create an object called b with x customers; 
+
+	void P2_LIST(int, int); // another method;
+		// example usage: b.P2_LIST(x, y);
+		// if x is 0, inherit from P1_LIST using y;
+		// if x is 1 and y is 1, sort the accounts in descending order based on checking balances
+		// if x is 1 and y is 2, sort the accounts in descending order based on savings balances
+		// returns no values;
+
+	int P2_TRANSACTION(int, string, int, int, int); // another method;
+		// example usage: b.P2_TRANSACTION(x, com, y, z, w)
+		// if x is 1 and com is "SAVINGS", deposit w into account with id of y and pin of z; 
+		// if x is 1 and com is "CHECKING", deposit w into account with id of y and pin of z; 
+		// if x is -1 and com is "SAVINGS", withdraw w from account with id of y and pin of z; 
+		// if x is -1 and com is "CHECKING", withdraw w from account with id of y and pin of z; 
+		// if transaction is successful, return customer index; return -1 if not successful;
+		// if input error, return -2;
+		// charge 2 USD for transction each fee even if error;
+   };
+  
+P2_BANK::P2_BANK(int x)
+	: P1_BANK(x) // call base class constructor; DO NOT put semicolon at the end of this line
+{
+	o_f << "P2P2P2: P2_BANK OBJECT IS CREATED." << endl;
+}
+
+void
+P2_BANK::P2_LIST(int x, int y)
+{
+	// your code goes below:
+	int i, j, max, max_pos, temp;
+
+	o_f << "P2P2P2: START P2_LIST" << endl;
+	o_f << "P2P2P2: P2_LIST IS CALLED WITH x: " << x  << ", y: " << y << endl;
+	if (x == 0)
+	{
+		o_f << "P2P2P2: INHERITING FROM P1_LIST GIVEN IN sample_p1.h:" << endl;
+		P1_LIST(y);	
+	}
+	else if (x == 1 && ((y == 1) || (y == 2)))
+	{
+		if(y == 1)
+		{
+			// if x is 1 and y is 1, sort the accounts in descending order based on checking balances
+			for(i = 0; i < n; i++)
+			{
+				max = checking_bal[i];
+				max_pos = i;
+				for(j = i; j < n; j++)
+				{
+					if (max < checking_bal[j])
+					{
+						max = checking_bal[j];
+						max_pos = j;
+					}
+					else{}
+				}
+				// swap ith element with max_pos element
+				temp = checking_bal[i];
+				checking_bal[i] = checking_bal[max_pos];
+				checking_bal[max_pos] = temp;
+
+				temp = savings_bal[i];
+				savings_bal[i] = savings_bal[max_pos];
+				savings_bal[max_pos] = temp;
+
+				temp = acct[i];
+			 	acct[i] = acct[max_pos];
+			 	acct[max_pos] = temp;
+
+				temp = pin[i];
+			 	pin[i] = pin[max_pos];
+			 	pin[max_pos] = temp;
+			}
+			o_f << "P2P2P2: SORTED IN DESCENDING ORDER BASED ON CHECKING BALANCES" << endl;
+		}
+		else if (y == 2)
+		{
+			// if x is 1 and y is 2, sort the accounts in descending order based on savings balances
+			for(i = 0; i < n; i++)
+			{
+				max = savings_bal[i];
+				max_pos = i;
+				for(j = i; j < n; j++)
+				{
+					if (max < savings_bal[j])
+					{
+						max = savings_bal[j];
+						max_pos = j;
+					}
+					else{}
+				}
+				// swap ith element with max_pos element
+				temp = checking_bal[i];
+				checking_bal[i] = checking_bal[max_pos];
+				checking_bal[max_pos] = temp;
+
+				temp = savings_bal[i];
+				savings_bal[i] = savings_bal[max_pos];
+				savings_bal[max_pos] = temp;
+
+				temp = acct[i];
+			 	acct[i] = acct[max_pos];
+			 	acct[max_pos] = temp;
+
+				temp = pin[i];
+			 	pin[i] = pin[max_pos];
+			 	pin[max_pos] = temp;
+			}
+			o_f << "P2P2P2: SORTED IN DESCENDING ORDER BASED ON SAVINGS BALANCES" << endl;
+		}
+	}
+	else
+	{
+		o_f << "P2P2P2: INPUT ERROR" << endl;
+	}
+	o_f << "P2P2P2: END P2_LIST" << endl;
+}
+
+		// if x is 1 and com is "CHECKING", deposit w into account with id of y and pin of z; 
+		// if x is -1 and com is "CHECKING", withdraw w from account with id of y and pin of z; 
+		// if transaction is successful, return customer index; return -1 if not successful;
+		// if input error, return -2;
+		// charge 2 USD for transction each fee even if error;
+int
+P2_BANK::P2_TRANSACTION(int x, string com, int y, int z, int w)
+{
+	// your code goes below:
+
+	int RET_VAL; // varaible to hold the value returned by P1_FIND;
+
+	o_f << "P2P2P2: START P2_TRANSACTION" << endl;
+	o_f << "P2P2P2: P2_TRANSACTION IS CALLED WITH x: " << x << ", com: " << com << ", y: " << y 
+			<< ", z: " << z << ", w: " << w << endl;
+
+	if (x == 1 && com == "SAVINGS")
+	{
+		RET_VAL = P1_FIND(y, z); // check if customer exists:
+		if(RET_VAL == -1 || RET_VAL == -2)
+		{
+			// it already says either no customer or input error from P1_FIND;
+			// here I do not have to print anything else;
+		}
+		else // this means customer is found;
+		{
+			if (w > 0)
+			{
+				savings_bal[RET_VAL] += (w - 2);
+				o_f << "P2P2P2: DEPOSITED " << w-2 << " INTO SAVINGS ACCOUNT OF CUSTOMER " << y << "." << endl;
+				o_f << "P2P2P2: CURRENT SAVINGS BALANCE IS: " << savings_bal[RET_VAL] << " DOLLARS." << endl;
+			}
+			else
+			{
+				savings_bal[RET_VAL] -= 2;
+				o_f << "P2P2P2: NEGATIVE VALUES OF DEPOSIT IS NOT VALID." << endl;
+				o_f << "P2P2P2: CURRENT SAVINGS BALANCE IS: " << savings_bal[RET_VAL] << " DOLLARS." << endl;
+			}
+		}
+	}
+	else if (x == -1 && com == "SAVINGS")
+	{
+		RET_VAL = P1_FIND(y, z); // check if customer exists:
+		if(RET_VAL == -1 || RET_VAL == -2)
+		{
+			// it already says either no customer or input error from P1_FIND;
+			// here I do not have to print anything else;
+		}
+		else // this means customer is found;
+		{
+				cout << "w is " << w << "\tAccount balance is " << savings_bal[RET_VAL] << endl;
+			if (w > 0)
+			{
+				if ((w+2) < savings_bal[RET_VAL])
+				{
+					savings_bal[RET_VAL] -= (w + 2);
+					o_f << "P2P2P2: WITHDREW " << w+2 << " FROM SAVINGS ACCOUNT OF CUSTOMER " << y << "." << endl;
+					o_f << "P2P2P2: CURRENT SAVINGS BALANCE IS: " << savings_bal[RET_VAL] << " DOLLARS." << endl;
+				}
+				else
+				{
+					savings_bal[RET_VAL] -= 2;
+					o_f << "P2P2P2: INSUFFICIENT FUNDS. " << endl;
+					o_f << "P2P2P2: CURRENT SAVINGS BALANCE IS: " << savings_bal[RET_VAL] << " DOLLARS." << endl;
+
+				}
+			}
+			else
+			{
+				savings_bal[RET_VAL] -= 2;
+				o_f << "P2P2P2: NEGATIVE VALUES OF WITHDRAWAL IS NOT VALID." << endl;
+				o_f << "P2P2P2: CURRENT SAVINGS BALANCE IS: " << savings_bal[RET_VAL] << " DOLLARS." << endl;
+			}
+		}
+	}
+	else if (x == 1 && com == "CHECKING")
+	{
+		RET_VAL = P1_FIND(y, z); // check if customer exists:
+		if(RET_VAL == -1 || RET_VAL == -2)
+		{
+			// it already says either no customer or input error from P1_FIND;
+			// here I do not have to print anything else;
+		}
+		else // this means customer is found;
+		{
+			if (w > 0)
+			{
+				checking_bal[RET_VAL] += (w - 2);
+				o_f << "P2P2P2: DEPOSITED " << w-2 << " INTO CHECKING ACCOUNT OF CUSTOMER " << y << "." << endl;
+				o_f << "P2P2P2: CURRENT CHECKING BALANCE IS: " << checking_bal[RET_VAL] << " DOLLARS." << endl;
+			}
+			else
+			{
+				checking_bal[RET_VAL] -= 2;
+				o_f << "P2P2P2: NEGATIVE VALUES OF DEPOSIT IS NOT VALID." << endl;
+				o_f << "P2P2P2: CURRENT CHECKING BALANCE IS: " << checking_bal[RET_VAL] << " DOLLARS." << endl;
+			}
+		}
+	}
+	else if (x == -1 && com == "CHECKING")
+	{
+		RET_VAL = P1_FIND(y, z); // check if customer exists:
+		if(RET_VAL == -1 || RET_VAL == -2)
+		{
+			// it already says either no customer or input error from P1_FIND;
+			// here I do not have to print anything else;
+		}
+		else // this means customer is found;
+		{
+			if (w > 0)
+			{
+				if ((w+2) < checking_bal[RET_VAL])
+				{
+					checking_bal[RET_VAL] -= (w + 2);
+					o_f << "P2P2P2: WITHDREW " << w+2 << " FROM CHECKING ACCOUNT OF CUSTOMER " << y << "." << endl;
+					o_f << "P2P2P2: CURRENT CHECKING BALANCE IS: " << checking_bal[RET_VAL] << " DOLLARS." << endl;
+				}
+				else
+				{
+					checking_bal[RET_VAL] -= 2;
+					o_f << "P2P2P2: INSUFFICIENT FUNDS. " << endl;
+					o_f << "P2P2P2: CURRENT CHECKING BALANCE IS: " << checking_bal[RET_VAL] << " DOLLARS." << endl;
+				}
+			}
+			else
+			{
+				checking_bal[RET_VAL] -= 2;
+				o_f << "P2P2P2: NEGATIVE VALUES OF WITHDRAWAL IS NOT VALID." << endl;
+				o_f << "P2P2P2: CURRENT CHECKING BALANCE IS: " << checking_bal[RET_VAL] << " DOLLARS." << endl;
+			}
+		}
+	}
+	else
+	{
+		o_f << "P2P2P2: INPUT ERROR" << endl;
+	}
+
+	o_f << "P2P2P2: END P2_TRANSACTION" << endl;
+}
+

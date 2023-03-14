@@ -1,0 +1,105 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include "/mnt/ee259dir/tools/pro_0/sample_p0.h"
+
+using namespace std;
+
+  class P1_BANK: public P0_BANK{
+   public:      // public methods for this class
+        P1_BANK(int); // constructor;
+		// example usage: b.P1_BANK(x);
+		// create an object called b with x customers; 
+
+	void P1_LIST(int); // a method;
+		// example usage: b.P1_LIST(x);
+		// if x is between 1 and 4 inclusive, inherit from P0_LIST;
+		// if x is 5, list the customer total balances;
+		// returns no values;
+
+	int P1_FIND(int, int); // another method;
+		// example usage: b.P1_FIND(p1, p2);
+		// give the balance of customer with id of p1 and pin of p2;
+		// if customer is found, return the index of the customer; 
+		// if no such customer, return -1;
+		// returns -2 if input error;
+   };
+  
+P1_BANK::P1_BANK(int x)
+	: P0_BANK(x) // call base class constructor; DO NOT put semicolon at the end of this line
+{
+	o_f << "P1P1: P1_BANK OBJECT IS CREATED." << endl;
+}
+
+void
+P1_BANK::P1_LIST(int x)
+{
+	// your code goes below:
+	int i, total;
+
+	o_f << "P1P1: START P1_LIST" << endl;
+	o_f << "P1P1: P1_LIST IS CALLED WITH x: " << x  << endl;
+	if (x >= 1 && x <=4)
+	{
+		o_f << "P1P1: INHERITING FROM P0_LIST GIVEN IN sample_p0.h:" << endl;
+		P0_LIST(x);	
+	}
+	else if (x == 5)
+	{
+		o_f << "THERE ARE A TOTAL OF " << n << " CUSTOMERS WITH TOTAL BALANCES AS:" << endl;
+		for(i = 0; i < n; i++)
+		{
+			total = checking_bal[i] + savings_bal[i];
+			o_f << "ACCOUNT: " << acct[i] << "\tTOTAL BALANCE: " << total << endl;
+		}
+	}
+	else
+	{
+		o_f << "P1P1: INPUT ERROR" << endl;
+	}
+	o_f << "P1P1: END P1_LIST" << endl;
+}
+
+int
+P1_BANK::P1_FIND(int p1, int p2)
+{
+	// your code goes below:
+	int i, FOUND, FOUND_POS;
+	o_f << "P1P1: START P1_FIND" << endl;
+	o_f << "P1P1: P1_FIND IS CALLED WITH p1: " << p1 << ", p2: " << p2 << endl;
+	if (p1 > 0 && p1 < 10000 && p2 > 0 && p2 < 1000)
+	{
+		FOUND = 0;
+		FOUND_POS = -1;
+		for(i = 0; i < n && FOUND == 0; i++)
+		{
+			if (p1 == acct[i] && p2 == pin[i])
+			{
+				FOUND = 1;
+				FOUND_POS = i; // contents of i is assigned as contents of FOUND_POS
+			}
+			else{}
+		}
+		if (FOUND == 1)
+		{
+			o_f << "P1P1: CUSTOMER IS FOUND." << endl;
+			o_f << "P1P1: CHECKING BALANCE: " << checking_bal[FOUND_POS] << 
+					"\tSAVINGS BALANCE: " << savings_bal[FOUND_POS] << endl;
+			o_f << "P1P1: END P1_FIND" << endl;
+			return FOUND_POS;
+		}
+		else
+		{
+			o_f << "P1P1: NO SUCH CUSTOMER." << endl;
+			o_f << "P1P1: END P1_FIND" << endl;
+			return -1;
+		}
+	}
+	else
+	{
+		o_f << "P1P1: INPUT ERROR" << endl;
+		o_f << "P1P1: END P1_FIND" << endl;
+		return -2;
+	}
+}
+

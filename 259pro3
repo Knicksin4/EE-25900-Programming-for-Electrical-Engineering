@@ -1,0 +1,290 @@
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include "/mnt/ee259dir/tools/pro_2/sample_p2.h"
+//#include "sample_p2.h"
+
+ifstream i_f_2; // declare a pointer to an input file;
+using namespace std;
+
+  class P3_BANK: public P2_BANK{
+   public:      // public methods for P3BANK class
+        P3_BANK(int); // constructor;
+		// example usage: b.P3_BANK(x);
+		// create an object called b with x customers; 
+		// read the names of the customers from customerNames.txt file;
+
+	void P3_LIST(int, int); // another method;
+		// example usage: b.P3_LIST(x, y);
+		// if x is 10 and y is 10, print names and balances;
+		// returns no values;
+
+	int P3_SETPIN(int, int, int); // another method;
+		// example usage: b.P3_SETPIN(A, B, C);
+		// A: account; B: pin; C: new pin;
+		// check if there is a customer with account A and pin B by P1_FIND(A, B);
+		// if so, set the pin to C;
+		// return customer index if successful, -1 otherwise;
+		// return -2 if input error;
+
+	int P3_SECURE_FIND(int, int, int, string, string);
+		// example usage: b.P3_SECURE_FIND(x, y, z, str1, str2);
+		// x: option; y: acct number; z: pin; str1: first name; str2: last name;
+		// if x is 0, inherit from P1_FIND(y, z);
+		// if x is 1, first check with P1_FIND and, if found, then check the names;
+		// if x is 2, check with only the names; 
+		// returns index if successful, -1 otherwise;
+		// returns -2 if input error;
+
+	void P3_SORT(string);
+		// example usage: b.P3_SORT(com);
+		// if com is "FIRST", sort in alphabetical order based on first names; 
+		// if com is "LAST", sort in alphabetical order based on last names; 
+		// returns no values;
+
+   protected:
+		string firstNames[20];
+		string lastNames[20];
+   };
+  
+P3_BANK::P3_BANK(int x)
+	: P2_BANK(x) // call base class constructor; DO NOT put semicolon at the end of this line
+{
+	int i;
+
+	i_f_2.open("customerNames.txt", ios::in); // open input file;
+
+	for(i =0; i < n; i++)
+	{
+		i_f_2 >> firstNames[i];
+		i_f_2 >> lastNames[i];
+	}
+	i_f_2.close(); // close input file;
+	i_f_2.clear(); // rewind file pointer to the top of the file;
+	o_f << "P3P3P3P3: P3_BANK OBJECT IS CREATED." << endl;
+}
+
+void
+P3_BANK::P3_LIST(int x, int y)
+{
+	// your code goes below:
+	int i;
+
+	o_f << "P3P3P3P3: START P3_LIST" << endl;
+	o_f << "P3P3P3P3: P3_LIST IS CALLED WITH x: " << x  << ", y: " << y << endl;
+	if (x == 10 and y == 10)
+	{
+		for(i = 0; i < n; i++)
+		{
+			o_f << "NAME: " << firstNames[i] << " " << lastNames[i] << "\tACCOUNT: " << acct[i] << 
+				"\tCHECKING: " << checking_bal[i] << "\tSAVINGS: " << savings_bal[i] << endl;
+		}
+	}
+	else
+	{
+		o_f << "P3P3P3P3: INPUT ERROR" << endl;
+	}
+	o_f << "P3P3P3P3: END P3_LIST" << endl;
+}
+
+int 
+P3_BANK::P3_SETPIN(int A, int B, int C) // another method;
+{
+	int RET_VAL;
+
+	o_f << "P3P3P3P3: START P3_SETPIN" << endl;
+	o_f << "P3P3P3P3: P3_SETPIN IS CALLED WITH A: " << A  << ", B: " << B << ", C: " << C << endl;
+
+	RET_VAL = P1_FIND(A, B);
+	if (RET_VAL != -1 && RET_VAL != -2) 
+	{
+		pin[RET_VAL] = C;
+		o_f << "P3P3P3P3: CHANGED CUSTOMER PIN TO " << C << endl;
+	}
+	else if (RET_VAL == -2)
+	{
+		o_f << "P3P3P3P3: PIN IS NOT CHANGED " << endl;
+	}
+	o_f << "P3P3P3P3: END P3_SETPIN" << endl;
+	return RET_VAL;
+}
+
+int
+P3_BANK::P3_SECURE_FIND(int x, int y, int z, string str1, string str2)
+{
+	int i, FOUND, FOUND_POS, RET_VAL;
+
+	o_f << "P3P3P3P3: START P3_SECURE_FIND" << endl;
+	o_f << "P3P3P3P3: P3_SECURE_FIND IS CALLED WITH x: " << x  << ", y: " << y << ", z: " << z << ", str1: " << str1
+			<< ", str2: " << str2 << endl;
+	if(x == 0)
+	{
+		o_f << "P3P3P3P3: INHERITING FROM P1_FIND given in sample_p1.h" << endl;
+		P1_FIND(y, z);
+	}
+	else if (x == 1)
+	{
+		RET_VAL = P1_FIND(y, z);
+		if (RET_VAL != -1 && RET_VAL != -2)
+		{
+			if (firstNames[RET_VAL] == str1 && lastNames[RET_VAL] == str2)
+			{
+				o_f << "P3P3P3P3: CUSTOMER IS FOUND." << endl;
+				o_f << "P3P3P3P3: NAME: " << firstNames[RET_VAL] << " " << lastNames[RET_VAL] 
+					<< " CHECKING BALANCE: " << checking_bal[RET_VAL] << 
+					"\tSAVINGS BALANCE: " << savings_bal[RET_VAL] << endl;
+				o_f << "P3P3P3P3: END P3_SECURE_FIND" << endl;
+				return RET_VAL;
+			}
+		}
+		else if (RET_VAL == -1)
+		{
+			o_f << "P3P3P3P3: CUSTOMER IS NOT FOUND." << endl;
+			o_f << "P3P3P3P3: END P3_SECURE_FIND" << endl;
+			return RET_VAL;
+		}
+		else
+		{
+			o_f << "P3P3P3P3: INPUT ERROR." << endl;
+			o_f << "P3P3P3P3: END P3_SECURE_FIND" << endl;
+			return RET_VAL;
+		}
+	}
+	else if(x == 2)
+	{
+		FOUND = 0;
+		FOUND_POS = -1;
+		for(i = 0; i < n && FOUND == 0; i++)
+		{
+			if(firstNames[i] == str1 && lastNames[i] == str2)
+			{
+				FOUND = 1;
+				FOUND_POS = i;
+			}
+		}
+		if (FOUND == 1)
+		{
+			o_f << "P3P3P3P3: CUSTOMER IS FOUND." << endl;
+			o_f << "P3P3P3P3: NAME: " << firstNames[FOUND_POS] << " " << lastNames[FOUND_POS] 
+					<< " CHECKING BALANCE: " << checking_bal[FOUND_POS] << 
+					"\tSAVINGS BALANCE: " << savings_bal[FOUND_POS] << endl;
+			o_f << "P3P3P3P3: END P3_SECURE_FIND" << endl;
+			return FOUND_POS;
+		}
+		else
+		{
+			o_f << "P3P3P3P3: CUSTOMER IS NOT FOUND." << endl;
+			o_f << "P3P3P3P3: END P3_SECURE_FIND" << endl;
+			return FOUND_POS;
+		}
+
+	}
+	else
+	{
+		o_f << "P3P3P3P3: INPUT ERROR." << endl;
+		o_f << "P3P3P3P3: END P3_SECURE_FIND" << endl;
+		return -2;
+	}
+}
+
+void 
+P3_BANK::P3_SORT(string COM)
+{
+	int i, j, temp, min_pos;
+	string min_name, temp_name;
+
+	o_f << "P3P3P3P3: START P3_SORT" << endl;
+	o_f << "P3P3P3P3: P3_SORT IS CALLED WITH COM: " << COM  << endl;
+	if (COM == "FIRST")
+	{
+		// if COM is FIRST, sort in ascending order based on first names:
+		for(i = 0; i < n; i++)
+		{
+			min_name = firstNames[i];
+			min_pos = i;
+			for(j = i; j < n; j++)
+			{
+				if (min_name > firstNames[j])
+				{
+					min_name = firstNames[j];
+					min_pos = j;
+				}
+				else{}
+			}
+			// swap ith element with min_pos element
+			temp_name = firstNames[i];
+			firstNames[i] = firstNames[min_pos];
+			firstNames[min_pos] = temp_name;
+
+			temp_name = lastNames[i];
+			lastNames[i] = lastNames[min_pos];
+			lastNames[min_pos] = temp_name;
+
+			temp = checking_bal[i];
+			checking_bal[i] = checking_bal[min_pos];
+			checking_bal[min_pos] = temp;
+
+			temp = savings_bal[i];
+			savings_bal[i] = savings_bal[min_pos];
+			savings_bal[min_pos] = temp;
+
+			temp = acct[i];
+		 	acct[i] = acct[min_pos];
+		 	acct[min_pos] = temp;
+
+			temp = pin[i];
+		 	pin[i] = pin[min_pos];
+		 	pin[min_pos] = temp;
+		}
+		o_f << "P3P3P3P3: SORTED IN ALPHABETICAL ORDER BASED ON FIRST NAMES" << endl;
+	}
+	else if (COM == "LAST")
+	{
+		// if COM is LAST, sort in ascending order based on last names:
+		for(i = 0; i < n; i++)
+		{
+			min_name = lastNames[i];
+			min_pos = i;
+			for(j = i; j < n; j++)
+			{
+				if (min_name > lastNames[j])
+				{
+					min_name = lastNames[j];
+					min_pos = j;
+				}
+				else{}
+			}
+			// swap ith element with min_pos element
+			temp_name = firstNames[i];
+			firstNames[i] = firstNames[min_pos];
+			firstNames[min_pos] = temp_name;
+
+			temp_name = lastNames[i];
+			lastNames[i] = lastNames[min_pos];
+			lastNames[min_pos] = temp_name;
+
+			temp = checking_bal[i];
+			checking_bal[i] = checking_bal[min_pos];
+			checking_bal[min_pos] = temp;
+
+			temp = savings_bal[i];
+			savings_bal[i] = savings_bal[min_pos];
+			savings_bal[min_pos] = temp;
+
+			temp = acct[i];
+		 	acct[i] = acct[min_pos];
+		 	acct[min_pos] = temp;
+
+			temp = pin[i];
+		 	pin[i] = pin[min_pos];
+		 	pin[min_pos] = temp;
+		}
+		o_f << "P3P3P3P3: SORTED IN ALPHABETICAL ORDER BASED ON LAST NAMES" << endl;
+	}
+	else
+	{
+		o_f << "P3P3P3P3: INPUT ERROR" << endl;
+	}
+	o_f << "P3P3P3P3: END P3_SORT" << endl;
+}

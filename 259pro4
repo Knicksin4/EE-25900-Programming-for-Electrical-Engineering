@@ -1,0 +1,239 @@
+///////////////////////////////////////////////////////////////
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string.h>
+#include "/mnt/ee259dir/tools/pro_3/sample_p3.h"
+//#include "sample_p3.h"
+
+using namespace std;
+
+  class P4_BANK: public P3_BANK{
+   public:      // public methods for P4_BANK class
+        P4_BANK(char *, int); // constructor;
+			// example usage: b.P4_BANK(NAME, x);
+			// create an object called b with x customers; name of the object is NAME assigned to objName var;
+
+		void P4_LIST(); // another method;
+			// example usage: b.P4_LIST();
+			// inherit from P3_LIST;
+			// returns no values;
+
+		int operator == (int); // an overloaded operator;
+			// example usage: if (b1 == 4)
+			// if there are 7 customers in object b1, return 1;
+			// otherwise return 0;
+
+		int operator == (P4_BANK); // an overloaded operator;
+			// example usage: if (b1 == b2)
+			// return 1 if the number of customers in b1 is equal to number of customers in b2;
+			// return 0 otherwise;
+
+        int operator -= (int); // an overloaded operator;
+			// example usage: b1 -= 1234;
+			// remove customer with id 1234 from b1 object, if it exists;
+			// returns 1 if successful;
+			// returns -1 if no such customer;
+			// returns -2 if input error;
+
+        void operator = (P4_BANK); // an overloaded operator;
+			// example usage: b1 = b2;
+			// assign elements of b2 to b1;
+			// b2 remains unchanged;
+			// returns nothing;
+
+        P4_BANK operator + (P4_BANK); // an overloaded operator;
+			// example usage: b1+b2;
+			// step 1: create a temporary P4_BANK object (call it P4_TEMP);
+			// step 2: copy elements of b1 into P4_TEMP;
+			// step 3: append elements of b2 into P4_TEMP; 
+			// step 4: return P4_TEMP object;
+	private:
+		char objName[15]; // character string that holds object name; max 14 characters;
+   };
+  
+P4_BANK::P4_BANK(char * oN, int x)
+	: P3_BANK(x) // call base class constructor; DO NOT put semicolon at the end of this line
+{
+	strcpy(objName, oN); // copy oN into objName;
+
+	o_f << "P4P4P4P4P4: P4_BANK OBJECT CALLED " << objName << " IS CREATED." << endl;
+	o_f << "=============================================" << endl;
+}
+
+void
+P4_BANK::P4_LIST()
+{
+	// your code goes below:
+	o_f << "P4P4P4P4P4: START P4_LIST FOR OBJECT "<<objName << endl;
+	o_f << "P4P4P4P4P4: INHERITING FROM P3_LIST GIVEN IN sample_p3.h" << endl;
+	P3_LIST(10,10);
+	o_f << "P4P4P4P4P4: END P4_LIST FOR OBJECT "<< objName << endl;
+	o_f << "=============================================" << endl;
+
+
+}
+			// example usage: if (b1 == 4)
+			// if there are 7 customers in object b1, return 1;
+			// otherwise return 0;
+int
+P4_BANK::operator == (int x)  
+{
+	// your code goes below:
+	o_f << "P4P4P4P4P4: START "<< objName<<".operator==(" <<x<<")"<< endl;
+	o_f << "P4P4P4P4P4: COMPARING n: "<< n <<" AND x: "<< x <<endl;
+	if (n==x)
+	{
+		o_f << "P4P4P4P4P4: RETURNING TRUE" << endl;
+		o_f << "P4P4P4P4P4: END "<< objName<<".operator==(" <<x<<")"<< endl;
+		o_f << "=============================================" <<endl;
+		return 1;
+	}
+	else 
+	{
+		o_f << "P4P4P4P4P4: RETURNING FALSE" << endl;
+		o_f << "P4P4P4P4P4: END "<< objName<<".operator==(" <<x<<")"<< endl;
+		o_f << "=============================================" <<endl;
+		return 0;
+	}
+
+}
+
+int
+P4_BANK::operator == (P4_BANK obj2)  
+{
+	// your code goes below:
+	o_f << "P4P4P4P4P4: START "<< objName<<".operator==(" <<obj2.objName<<")"<< endl;
+	o_f << "P4P4P4P4P4: COMPARING n IN " << objName<<": " <<n<<" AND n IN "<<obj2.objName<< ": "<<obj2.n << endl;
+	if (n==obj2.n)
+	{
+		o_f << "P4P4P4P4P4: RETURNING TRUE" << endl;
+		o_f << "P4P4P4P4P4: END "<< objName<<".operator==(" <<obj2.objName<<")"<< endl;
+		o_f << "=============================================" <<endl;
+		return 1;
+	}
+	else 
+	{
+		o_f << "P4P4P4P4P4: RETURNING FALSE" << endl;
+		o_f << "P4P4P4P4P4: END "<< objName<<".operator==(" <<obj2.objName<<")"<< endl;
+		o_f << "=============================================" <<endl;
+		return 0;
+	}
+
+}
+
+			// example usage: b1 -= 1234;
+			// remove customer with id 1234 from b1 object, if it exists;
+			// returns 1 if successful;
+			// returns -1 if no such customer;
+			// returns -2 if input error;
+int
+P4_BANK::operator -= (int x) 
+{
+	// your code goes below:
+int i, found, found_pos;
+found =0;
+found_pos = -1;
+
+o_f << "P4P4P4P4P4: START "<< objName<<".operator-=(" <<x<<")"<< endl;
+if (x < 0 || x > 9999)
+{
+	o_f<< "P4P4P4P4P4: INPUT ERROR "<< endl;
+	o_f << "P4P4P4P4P4: END "<< objName<<".operator-=(" <<x<<")"<< endl;
+	o_f << "============================================="<<endl;
+	return -2;
+}
+else {
+for (i=0 ;i< n&& found ==0;i++)
+{
+	if (acct[i] ==x)
+	{
+		found =1;
+		found_pos = i;
+	}
+	else {}
+}
+if (found ==1)
+{
+	o_f << "P4P4P4P4P4: CUSTOMER WITH ACCT "<<x<<" IS DELETED FROM "<<objName << "."<< endl;
+	o_f << "P4P4P4P4P4: END "<< objName<<".operator-=(" <<x<<")"<< endl;
+	o_f << "============================================="<<endl;
+	for( i=found_pos; i< n-1; i++)
+	{
+		acct[i] = acct[i+1];
+		pin[i] = pin[i+1];
+		firstNames[i] = firstNames[i+1];
+		lastNames[i] = lastNames[i+1];
+		checking_bal[i]= checking_bal[i+1];
+		savings_bal[i]= savings_bal[i+1];
+
+	}
+	n--;
+	return 1;
+}
+else 
+{
+	o_f<< "P4P4P4P4P4: NO SUCH CUSTOMER WITH ACCT "<< x<<endl;
+	o_f << "P4P4P4P4P4: END "<< objName<<".operator-=(" <<x<<")"<< endl;
+	o_f << "============================================="<<endl;
+	return -1;
+}
+}
+}
+			// example usage: b1 = b2;
+			// assign elements of b2 to b1;
+			// b2 remains unchanged;
+			// returns nothing;
+
+void
+P4_BANK::operator = (P4_BANK obj2) 
+{
+	// your code goes below:
+o_f << "P4P4P4P4P4: START "<<objName <<".operator=("<<obj2.objName<<")"<<endl;
+n=obj2.n;
+for (int i =0; i<n ; i++)
+	{
+		acct[i] = obj2.acct[i];
+		pin[i] = obj2.pin[i];
+		firstNames[i] = obj2.firstNames[i];
+		lastNames[i] = obj2.lastNames[i];
+		checking_bal[i]= obj2.checking_bal[i];
+		savings_bal[i]= obj2.savings_bal[i];
+	}
+o_f << "P4P4P4P4P4: CUSTOMERS IN "<<obj2.objName<<" ARE ASSIGNED TO "<< objName<<endl;
+o_f << "P4P4P4P4P4: END "<<objName <<".operator=("<<obj2.objName<<")"<<endl;
+o_f << "============================================="<<endl;
+
+}
+
+P4_BANK
+P4_BANK::operator + (P4_BANK obj2)
+{
+	// your code goes below:
+	P4_BANK P4_TEMP("P4_TEMP", 0);
+o_f << "P4P4P4P4P4: START "<<objName<<".operator+("<<obj2.objName<<")"<<endl;
+for (int i =0; i<n ; i++)
+	{
+		P4_TEMP.acct[i] = acct[i];
+		P4_TEMP.pin[i] = pin[i];
+		P4_TEMP.firstNames[i] = firstNames[i];
+		P4_TEMP.lastNames[i] = lastNames[i];
+		P4_TEMP.checking_bal[i]= checking_bal[i];
+		P4_TEMP.savings_bal[i]= savings_bal[i];
+	}
+o_f << "P4P4P4P4P4: "<<n<<" CUSTOMERS IN "<<objName<<" AND "<<obj2.n <<"CUSTOMERS IN "<<obj2.objName<<" ARE ADDED TO P4_TEMP"<<endl;
+for (int i =0; i<n ; i++)
+	{
+		P4_TEMP.acct[i+n] = obj2.acct[i];
+		P4_TEMP.pin[i+n] = obj2.pin[i];
+		P4_TEMP.firstNames[i+n] = obj2.firstNames[i];
+		P4_TEMP.lastNames[i+n] = obj2.lastNames[i];
+		P4_TEMP.checking_bal[i+n]= obj2.checking_bal[i];
+		P4_TEMP.savings_bal[i+n]= obj2.savings_bal[i];
+	}
+	P4_TEMP.n = n+ obj2.n;
+o_f << "P4P4P4P4P4: RETURNING P4_TEMP"<<endl;
+o_f << "P4P4P4P4P4: END "<<objName<<".operator+("<<obj2.objName<<")"<<endl;
+o_f << "============================================="<<endl;
+	return P4_TEMP;
+}
